@@ -5,14 +5,19 @@ class TVShow : public Video {
    public:
       TVShow();//default constructor
       TVShow(string, string);//non-default constructor
+	  TVShow GetShows(int Duration, int);
       void PrintVideo();
       void SetSeasons(string seasons);
       void SetEpisodes(string episodes);
-      string SetSeasons();
-      string SetEpisodes();
+	  void SetShow();
+      string GetSeasons();
+      string GetEpisodes();
+	  int GetNumber();
    private: //private variables
       string seasons;
       string episodes;
+	  int number;
+	  vector <TVShow> Shows;
 };
 
 #endif
