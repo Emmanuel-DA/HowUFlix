@@ -9,6 +9,10 @@ using namespace std;
 #include "TVShow.h"
 #include "Movie.h"
 #include "User.h"
+#include "Sort.h"
+#include "Search.h"
+#include "Sort.cpp"
+#include "Search.cpp"
 
 int main() {
   size_t position;
