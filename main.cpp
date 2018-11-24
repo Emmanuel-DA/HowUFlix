@@ -2,6 +2,7 @@
 #include <fstream>
 #include <ctime>
 #include <vector>
+#include <string>
 #include <iomanip>
 using namespace std;
 #include "Video.h"
@@ -13,29 +14,16 @@ int main() {
   size_t position;
   ifstream myfile;
   myfile.open("FavoriteMovieTVShowsClassList.csv");
-  string  Title, Duration, Genre, Rating, UserRating, name, ID, year, name1, Pname;//input variables
+  string  Title, Duration, Genre, Rating, UserRating, name, ID, year, name1, Pname, Utime, Urating, Ugenre;//input variables
+  int time;
+  TVShow EntryS; //class instances
+  Movie EntryM;
+
   vector <Movie> Movies;//playlist vector
   vector <TVShow> TVShows;
   bool printedNothing = true;
-
-  // cout << "Example Output: " << endl;//get input from users
-  // cout << "Enter a Video Title: " << endl; 
-  // getline(cin, Title);
-  // cout << "Enter the duration in minutes: " << endl; 
-  // getline(cin, Duration);
-  // cout << "Enter the video genre: " << endl;
-  // getline(cin, Genre);
-  // cout << "Enter the rating: " << endl;
-  // getline(cin, Rating);
-  // cout << "Enter streaming service: " << endl;
-  // getline(cin, UserRating);
-  // cout << endl;
   
-
-
-  
-  
-  while (myfile) {
+  while (!myfile.eof()) { //Populate Database
     getline(myfile, Title, ',');
     getline(myfile, Genre, ',');
     getline(myfile, Duration, ',');
@@ -44,30 +32,50 @@ int main() {
     getline(myfile, year);
     position = Title.find("Season");
     if (position != string::npos) { //check rating to determine TV or movie
-      TVShow Entry1;
-      Entry1.setInfo(Title, "TV-Show", Genre, Rating, UserRating, stoi(Duration), stoi(year));
-      TVShows.push_back(Entry1);
+      EntryS.setInfo(Title, "TV-Show", Genre, Rating, UserRating, stoi(Duration), year);
+      EntryS.SetShow();
     }
     else {
-      Movie Entry1;
-      Entry1.setInfo(Title, "Movie", Genre, Rating, UserRating, stoi(Duration), stoi(year));
-      Movies.push_back(Entry1);
+      EntryM.setInfo(Title, "Movie", Genre, Rating, UserRating, stoi(Duration), year);
+	  EntryM.SetMovie();
     }
   }
 
-  cout << "Enter your first name: " << endl;
+  cout << "***------------------------------------------------------------------------------------------***" << endl << endl;//intro
+  cout << right << setw(86) << "***Welcome to HowUFlix, an advanced streaming platform from the future.***" << endl << endl;
+  cout << "This platform is built with human empathy as the backbone" << endl;
+  cout << "With an intuitive approach, users are able to tailor their streaming experiences in a very flexible way." << endl << endl;
+  cout << "***------------------------------------------------------------------------------------------***" << endl << endl;
+
+  cout << "We just need some info and you're set to dive in!" << endl << endl;
+  cout << "First name: ";
   getline(cin, name); //get user name
-  cout << "Enter your last name: " << endl;
+  cout << "Last name: ";
   getline(cin, name1);
-  cout << "Enter your userID: " << endl;
+  cout << "userID: ";
   getline(cin, ID); //get user ID
-  cout << "Enter playlist name: " << endl;
-  getline(cin, Pname);
-  User User1(name, name1, ID, Pname); //create an instance of the user class
+  User User1(name, name1, ID); //create an instance of the user class
   cout << endl;
+
+  cout << "For maximum satisfaction please enlarge the size of your console" << endl << endl;
+
+  //ask for user input
+  cout << "How much me time have you set aside :) --> ";
+  getline(cin, Utime); //get time
+  cout << "How good should the video be (Scale of 1 - 5) --> ";
+  getline(cin, Urating);
+  cout << "What genre do you want to watch (Seperate multiple genres with a space) --> ";
+  getline(cin, Ugenre); //get user ID
+  cout << endl;
+  time = stoi(Utime); //look for exceptions
+  /*
   User1.PrintUserInfo();
+  //get shows with first filter
+
+  //TODO: filter#1 and filter #2,3
+  
   for (int i = 0; i < TVShows.size(); i++){ //search TVSHOw
-    if (TVShows.at(i).getGenre() == "Comedy") {
+    if (EntryS.Shows.at(i).getGenre() == "Comedy") {
       TVShows.at(i).PrintVideo();
       printedNothing  = false;
     }
@@ -78,8 +86,11 @@ int main() {
       printedNothing = false;
     }
   }
+  */
   if (printedNothing) {
-    cout << "There are no comedies on your playlist." << endl;
+    cout << "We are sorry none of your input was able to result in a suggestion but we will keep improving our database" << endl;
   }
+  cout << "Thank you for using HowUFlix" << endl << endl;
+  system("pause");
   return 0;
 }

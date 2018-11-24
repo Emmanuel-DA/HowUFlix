@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <vector>
 #include <iomanip>
 using namespace std;
 #include "Video.h"
@@ -16,7 +18,12 @@ void Movie::GetHS(string HS){
 }
 string Movie::SetHS() {
   return hassequel;
-} 
+}
+void Movie::SetMovie()
+{
+	Movies.push_back(*this);
+}
+
 void Movie::PrintVideo() { //print Video for Movie
   cout << setw(40) << VideoName << setw(8) << Genre;
   cout << setw(8) << Duration << setw(8) << UserRating;

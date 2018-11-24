@@ -4,12 +4,11 @@
 class User{
   public:
     User();
-    User(string, string, string, string);
+    User(string, string, string);
     void PrintUserInfo() const;
   private:
     string name;
     string name1;
     string ID;
-    string Pname;
 };
 #endif

@@ -7,10 +7,11 @@ class Movie : public Video {
       Movie(string, string);//non-default constructor
       void PrintVideo();
       void GetHS(string);
-      string SetHS();      
+      string SetHS();
+	  void SetMovie();
    private: //private variables
       string hassequel;
-
+	  vector <Movie> Movies;
 };
 
 #endif
