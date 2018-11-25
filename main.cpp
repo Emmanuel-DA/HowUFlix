@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <future> //async
 using namespace std;
 #include "Video.h"
 #include "TVShow.h"
@@ -19,7 +20,7 @@ int main() {
   ifstream myfile;
   myfile.open("FavoriteMovieTVShowsClassList.csv");
   string  Title, Duration, Genre, Rating, UserRating, name, ID, year, name1, Pname, Utime, Urating, Ugenre;//input variables
-  int time;
+  int time,rating;
   TVShow EntryS; //class instances
   Movie EntryM;
 
@@ -36,11 +37,11 @@ int main() {
     getline(myfile, year);
     position = Title.find("Season");
     if (position != string::npos) { //check rating to determine TV or movie
-      EntryS.setInfo(Title, "TV-Show", Genre, Rating, UserRating, stoi(Duration), year);
+      EntryS.setInfo(Title, "TV-Show", Genre, stof(UserRating), Rating, stoi(Duration), year);
       EntryS.SetShow();
     }
     else {
-      EntryM.setInfo(Title, "Movie", Genre, Rating, UserRating, stoi(Duration), year);
+      EntryM.setInfo(Title, "Movie", Genre, stof(UserRating), Rating, stoi(Duration), year);
 	  EntryM.SetMovie();
     }
   }
@@ -72,11 +73,86 @@ int main() {
   getline(cin, Ugenre); //get user ID
   cout << endl;
   time = stoi(Utime); //look for exceptions
-  /*
-  User1.PrintUserInfo();
-  //get shows with first filter
+  rating = stoi(Urating);
 
-  //TODO: filter#1 and filter #2,3
+
+  //TVShows
+  //first filter-time
+  for (int i = 0; i < EntryS.GetNumber(); i++) {
+	  try {
+		  TVShows.push_back(EntryS.GetShows(time, i)); //catch exception when the function returns nothing
+	  }
+	  catch (...) {
+		  ;
+	  }
+  }
+  //second filter-rating
+  for (int i = 0; i < TVShows.size(); i++) {//check for a range of ratings so you can suggest to the user
+	  if (abs((TVShows.at(i).getRating()) - rating) < 0.2) { //
+		  TVShows.erase(TVShows.begin() + i);
+	  }
+  }
+  //Last filtering - genre
+  vector <string> UG; //store user genre
+  char letter;
+  string genre;
+  for (int i = 0; i < Ugenre.size(); i++) {//seperate the genre into the a genre vector
+	  if (Ugenre[i] == ' ') {
+		  UG.push_back(genre);
+	  }
+	  genre += Ugenre[i];
+  }
+  for (int i = 0; i < TVShows.size(); i++) {//check for a range of ratings so you can suggest to the user
+	  for (int j = 0; j < genre.size(); j++) {
+		  position = TVShows.at(i).getGenre().find(genre[j]);
+		  if (position == string::npos) {
+			  TVShows.erase(TVShows.begin() + i);
+		  }
+	  }
+  }
+  //------------------------------------------------------End TVShows
+
+  
+  //Movies
+  //first filter-time
+  for (int i = 0; i < EntryM.GetNumber(); i++) {
+	  try {
+		  Movies.push_back(EntryM.GetMovies(time, i)); //catch exception when the function returns nothing
+	  }
+	  catch (...) {
+		  ;
+	  }
+  }
+  //second filter-rating
+  for (int i = 0; i < Movies.size(); i++) {//check for a range of ratings so you can suggest to the user
+	  if (abs((Movies.at(i).getRating()) - rating) < 0.2) { //
+		  Movies.erase(Movies.begin() + i);
+	  }
+  }
+  //Last filtering - genre
+  vector <string> UG2; //store user genre
+  char letter2;
+  string genre2;
+  for (int i = 0; i < Ugenre.size(); i++) {//seperate the genre into the a genre vector
+	  if (Ugenre[i] == ' ') {
+		  UG2.push_back(genre);
+	  }
+	  genre2 += Ugenre[i];
+  }
+  for (int i = 0; i < Movies.size(); i++) {//check for a range of ratings so you can suggest to the user
+	  for (int j = 0; j < genre2.size(); j++) {
+		  position = Movies.at(i).getGenre().find(genre2[j]);
+		  if (position == string::npos) {
+			  Movies.erase(Movies.begin() + i);
+		  }
+	  }
+  }
+//-----------------------------------------------End Movies
+  
+  //TODO: Sort and print to the user and then search
+  User1.PrintUserInfo();//user details
+
+  /*
   
   for (int i = 0; i < TVShows.size(); i++){ //search TVSHOw
     if (EntryS.Shows.at(i).getGenre() == "Comedy") {

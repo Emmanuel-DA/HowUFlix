@@ -22,6 +22,20 @@ string Movie::SetHS() {
 void Movie::SetMovie()
 {
 	Movies.push_back(*this);
+	number++;
+}
+
+int Movie::GetNumber()
+{
+	return number;
+}
+
+Movie Movie::GetMovies(int hours, int number)
+{
+	if (Movies.at(number).Duration < hours) {
+		return Movies.at(number);
+	}
+	//try except from the main function will be used to handle this exception
 }
 
 void Movie::PrintVideo() { //print Video for Movie

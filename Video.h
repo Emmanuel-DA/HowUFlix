@@ -11,13 +11,14 @@ class Video {
    public:
       Video();//default constructor
       Video(string, string);//non-default constructor
-      void setInfo(string, string, string, string, string, int, string);//mutator
+      void setInfo(string, string, string, int, string, int, string);//mutator
       void setPlaylistName(string);
       string getType() const;//accessor
       string getName() const;//accessor
       string getPlaylistName() const;//accessor
       string getDuration() const;//accessor
       string getGenre() const; //accessor
+	  float getRating() const; //accessor
       virtual void PrintVideo() = 0;
     private: //private variables
       string Playlist;
@@ -25,7 +26,7 @@ class Video {
       string VideoName;
       string VideoType;
       string Genre;
-      string Rating;
+      float Rating;
       string UserRating;
       string year;
       timeinfo Time;
