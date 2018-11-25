@@ -1,4 +1,4 @@
-# HowUFlix
+# Hidden
 In this Project, we will create an application that uniquely designs a video playlist for students based off of three factors:
 
     -The amount of free time that they have to watch a movie or set of tv-shows
