@@ -19,7 +19,7 @@ int main() {
   size_t position;
   ifstream myfile;
   myfile.open("FavoriteMovieTVShowsClassList.csv");
-  string  Title, Duration, Genre, Rating, UserRating, name, ID, year, name1, Pname, Utime, Urating, Ugenre;//input variables
+  string  Title, Duration, Genre, Rating, UserRating, name, ID, year, name1, Pname, Utime, Urating, Ugenre, video;//input variables
   int time,rating;
   TVShow EntryS; //class instances
   Movie EntryM;
@@ -65,7 +65,7 @@ int main() {
   cout << "For maximum satisfaction please enlarge the size of your console" << endl << endl;
 
   //ask for user input
-  cout << "How much me time have you set aside :) --> ";
+  cout << "How much me time have you set aside (minutes) :) --> ";
   getline(cin, Utime); //get time
   cout << "How good should the video be (Scale of 1 - 5) --> ";
   getline(cin, Urating);
@@ -77,19 +77,14 @@ int main() {
 
 
   //TVShows
+  vector <TVShow> TVShowsFilter0; //containing required TV shows-- rating filter
+  vector <TVShow> TVShowsFilter; //containing required TV shows-- genre filter
   //first filter-time
-  for (int i = 0; i < EntryS.GetNumber(); i++) {
-	  try {
-		  TVShows.push_back(EntryS.GetShows(time, i)); //catch exception when the function returns nothing
-	  }
-	  catch (...) {
-		  ;
-	  }
-  }
+  TVShows = EntryS.GetShows(time); 
   //second filter-rating
   for (int i = 0; i < TVShows.size(); i++) {//check for a range of ratings so you can suggest to the user
-	  if (abs((TVShows.at(i).getRating()) - rating) < 0.2) { //
-		  TVShows.erase(TVShows.begin() + i);
+	  if (abs((TVShows.at(i).getURating()) - rating) < 0.5) { //
+		  TVShowsFilter0.push_back(TVShows.at(i));
 	  }
   }
   //Last filtering - genre
@@ -97,16 +92,21 @@ int main() {
   char letter;
   string genre;
   for (int i = 0; i < Ugenre.size(); i++) {//seperate the genre into the a genre vector
-	  if (Ugenre[i] == ' ') {
+	  if (Ugenre[i] == ' ') { //space delimeter
 		  UG.push_back(genre);
+		  genre = "";
+		  i++;
 	  }
 	  genre += Ugenre[i];
+	  if (i == (Ugenre.size() - 1)) { //end of line delimeter
+		  UG.push_back(genre);
+	  }
   }
-  for (int i = 0; i < TVShows.size(); i++) {//check for a range of ratings so you can suggest to the user
-	  for (int j = 0; j < genre.size(); j++) {
-		  position = TVShows.at(i).getGenre().find(genre[j]);
-		  if (position == string::npos) {
-			  TVShows.erase(TVShows.begin() + i);
+  for (int i = 0; i < TVShowsFilter0.size(); i++) {//check for a range of ratings so you can suggest to the user
+	  for (int j = 0; j < UG.size(); j++) {
+		  position = TVShowsFilter0.at(i).getGenre().find(UG.at(j));
+		  if (position != string::npos) {
+			  TVShowsFilter.push_back(TVShowsFilter0.at(i));
 		  }
 	  }
   }
@@ -114,60 +114,65 @@ int main() {
 
   
   //Movies
+  vector <Movie> MoviesFilter0; //containing required TV shows -- rating filter
+  vector <Movie> MoviesFilter; //containing required TV shows -- genre filter
   //first filter-time
-  for (int i = 0; i < EntryM.GetNumber(); i++) {
-	  try {
-		  Movies.push_back(EntryM.GetMovies(time, i)); //catch exception when the function returns nothing
-	  }
-	  catch (...) {
-		  ;
-	  }
-  }
+  Movies = EntryM.GetMovies(time);
   //second filter-rating
   for (int i = 0; i < Movies.size(); i++) {//check for a range of ratings so you can suggest to the user
-	  if (abs((Movies.at(i).getRating()) - rating) < 0.2) { //
-		  Movies.erase(Movies.begin() + i);
+	  if (abs((Movies.at(i).getURating()) - rating) < 0.5) { //
+		  MoviesFilter0.push_back(Movies.at(i));
 	  }
   }
   //Last filtering - genre
-  vector <string> UG2; //store user genre
-  char letter2;
-  string genre2;
-  for (int i = 0; i < Ugenre.size(); i++) {//seperate the genre into the a genre vector
-	  if (Ugenre[i] == ' ') {
-		  UG2.push_back(genre);
-	  }
-	  genre2 += Ugenre[i];
-  }
-  for (int i = 0; i < Movies.size(); i++) {//check for a range of ratings so you can suggest to the user
-	  for (int j = 0; j < genre2.size(); j++) {
-		  position = Movies.at(i).getGenre().find(genre2[j]);
-		  if (position == string::npos) {
-			  Movies.erase(Movies.begin() + i);
+  for (int i = 0; i < MoviesFilter0.size(); i++) {//check for a range of ratings so you can suggest to the user
+	  for (int j = 0; j < UG.size(); j++) {
+		  position = MoviesFilter0.at(i).getGenre().find(UG.at(j));
+		  if (position != string::npos) {
+			  MoviesFilter.push_back(MoviesFilter0.at(i));
 		  }
 	  }
   }
 //-----------------------------------------------End Movies
   
-  //TODO: Sort and print to the user and then search
   User1.PrintUserInfo();//user details
 
-  /*
-  
-  for (int i = 0; i < TVShows.size(); i++){ //search TVSHOw
-    if (EntryS.Shows.at(i).getGenre() == "Comedy") {
-      TVShows.at(i).PrintVideo();
-      printedNothing  = false;
-    }
-  } 
-  for (int i = 0; i < Movies.size(); i++){ //search Movie
-    if (Movies.at(i).getGenre() == "Comedy") {
-      Movies.at(i).PrintVideo();
-      printedNothing = false;
-    }
+  Sort<TVShow>::InsertionSort(TVShowsFilter);//sort according to rating using static function
+  Sort<Movie>::InsertionSort(MoviesFilter);
+  cout << "TVShows ---------------------" << endl;//show suggestion to user
+  for (int i = 0; i < TVShowsFilter.size(); i++) {
+	  TVShowsFilter.at(i).sneakpeak();
+	  cout << endl;
+	  printedNothing = false;
   }
-  */
-  if (printedNothing) {
+  cout << endl;
+  cout << "Movies ---------------------" << endl;
+  for (int i = 0; i < MoviesFilter.size(); i++) {
+	  MoviesFilter.at(i).sneakpeak();
+	  cout << endl;
+	  printedNothing = false;
+  }
+  cout << endl;
+  if (!printedNothing) {
+	  cout << "What video would you like to watch (Enter title from above) ---> ";
+	  getline(cin, video);
+	  cout << endl;
+
+	  int index; //look for the index from the suggested one
+	  bool isMovie = true;
+	  index = Search<Movie>::LinearSearch(MoviesFilter, video);
+	  if (index == NULL) {
+		  index = Search<TVShow>::LinearSearch(TVShowsFilter, video);
+		  isMovie = false;
+	  }
+	  if (isMovie) { //print 
+		  MoviesFilter.at(index).PrintVideo();
+	  }
+	  else {
+		  TVShowsFilter.at(index).PrintVideo();
+	  }
+  }
+  else {
     cout << "We are sorry none of your input was able to result in a suggestion but we will keep improving our database" << endl;
   }
   cout << "Thank you for using HowUFlix" << endl << endl;

@@ -2,8 +2,8 @@
 #define SORT_H
 #include <vector>
 
-template <class dataType> class Sort {
+template <class dataType> class Sort { //template Sort class
   public:
-    static void InsertionSort(vector<dataType>); //Function Prototype for Merge Sort
+    static void InsertionSort(vector<dataType>); //static Function Prototype for Merge Sort
 };
 #endif

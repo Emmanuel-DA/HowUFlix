@@ -2,9 +2,9 @@
 #define SEARCH_H
 #include <vector>
 
-template <class dataType> class Search {
+template <class dataType> class Search { 
   public:
-    static dataType LinearSearch(vector<dataType>, dataType); //Function Prototype for Linear Search
+    static int LinearSearch(vector<dataType>, string); //static Function Prototype for Linear Search
 };
 
 #endif

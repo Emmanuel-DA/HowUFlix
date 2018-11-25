@@ -8,6 +8,7 @@ using namespace std;
 
 TVShow::TVShow() {//constructor
   //initializing
+	number = 0;
 }
 
 TVShow::TVShow(string Name, string Type) {//contructor
@@ -15,12 +16,15 @@ TVShow::TVShow(string Name, string Type) {//contructor
   VideoType = Type;
 }
 
-TVShow TVShow::GetShows(int hours, int number)
+vector <TVShow> TVShow::GetShows(int hours)
 {
-	if (Shows.at(number).Duration < hours) {
-		return Shows.at(number);
+	vector <TVShow> FilteredShows;
+	for (int i = 0; i < number; i++) {
+		if (Shows.at(i).Duration < hours) {
+			FilteredShows.push_back(Shows.at(i));
+		}
 	}
-	//try except from the main function will be used to handle this exception
+	return FilteredShows;
 }
 
 void TVShow::SetSeasons(string seasons) { //set/get unique properties of TV
@@ -51,7 +55,10 @@ int TVShow::GetNumber()
 }
 
 void TVShow::PrintVideo() {//print Video for TVShow
-  cout << left << setw(40) << VideoName << Genre << "     ";
-  cout << setw(8) << Duration << setw(8) << UserRating;
-  cout << setw(8) << Rating << setw(8) << year << endl;
+	cout << "Video name: " << VideoName << endl;
+	cout << "Genre: " << Genre << endl;
+	cout << "Rating: " << Rating << endl;
+	cout << "User Rating: " << UserRating << endl;
+	cout << "Runtime: " << Duration << endl;
+	cout << "Release Date: " << year << endl << endl;
 }
