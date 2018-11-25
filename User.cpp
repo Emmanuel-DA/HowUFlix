@@ -17,5 +17,5 @@ User::User(string Name, string Name1, string ID) { //non-default constructor
 void User::PrintUserInfo() const { //accessor
   cout << "Suggestions for ";
   cout <<  name << " ";
-  cout << name1 << endl << endl;
+  cout << name1 << " (Sneak Peek): " << endl << endl;
  }

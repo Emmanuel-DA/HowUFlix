@@ -5,7 +5,7 @@ class TVShow : public Video {
    public:
       TVShow();//default constructor
       TVShow(string, string);//non-default constructor
-	  TVShow GetShows(int Duration, int);
+	  vector <TVShow> GetShows(int);
       void PrintVideo();
       void SetSeasons(string seasons);
       void SetEpisodes(string episodes);

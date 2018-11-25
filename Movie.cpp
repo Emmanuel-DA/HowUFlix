@@ -8,6 +8,7 @@ using namespace std;
 
 Movie::Movie() {//constructor
   //initializing //using video's
+	number = 0;
 }
 Movie::Movie(string Name, string Type) {//contructor
   VideoName = Name;
@@ -30,16 +31,22 @@ int Movie::GetNumber()
 	return number;
 }
 
-Movie Movie::GetMovies(int hours, int number)
+vector <Movie> Movie::GetMovies(int hours)
 {
-	if (Movies.at(number).Duration < hours) {
-		return Movies.at(number);
+	vector <Movie> FilteredMovies;
+	for (int i = 0; i < number; i++) {
+		if (Movies.at(i).Duration < hours) {
+			FilteredMovies.push_back(Movies.at(i));
+		}
 	}
-	//try except from the main function will be used to handle this exception
+	return FilteredMovies;
 }
 
 void Movie::PrintVideo() { //print Video for Movie
-  cout << setw(40) << VideoName << setw(8) << Genre;
-  cout << setw(8) << Duration << setw(8) << UserRating;
-  cout << setw(8) << Rating << setw(8) << year << endl;
+	cout << "Video name: " << VideoName << endl;
+	cout << "Genre: " << Genre << endl;
+	cout << "Rating: " << Rating << endl;
+	cout << "User Rating: " << UserRating << endl;
+	cout << "Runtime: " << Duration << endl;
+	cout << "Release Date: " << year << endl << endl;
 }

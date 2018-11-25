@@ -8,7 +8,7 @@ Video::Video() {//constructor
   VideoName = "None";
   VideoType = "None";
   Genre = "None";
-  Rating = 0;
+  UserRating = 0;
   year = "none";
 
   Duration = 0;
@@ -17,7 +17,7 @@ Video::Video(string Name, string Type) {//contructor
   VideoName = Name;
   VideoType = Type;
 }
-void Video::setInfo(string Name, string Type, string Genre, int Rating, string uRating, int Duration, string year){ //mutator
+void Video::setInfo(string Name, string Type, string Genre, float uRating, string Rating, int Duration, string year){ //mutator
   VideoName = Name;
   VideoType = Type;
   this->Genre = Genre;
@@ -52,7 +52,14 @@ string Video::getGenre() const { //accessor
   return Genre;
 }
 
-float Video::getRating() const
+float Video::getURating() const
 {
-	return Rating;
+	return UserRating;
+}
+
+void Video::sneakpeak() //print a preview of the movies
+{
+	cout << "Video name: " << VideoName << endl;
+	cout << "Genre: " << Genre << endl;
+	cout << "Rating: " << UserRating << endl;
 }

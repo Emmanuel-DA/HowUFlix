@@ -10,7 +10,7 @@ class Movie : public Video {
       string SetHS();
 	  void SetMovie();
 	  int GetNumber();
-	  Movie GetMovies(int, int);
+	  vector <Movie> GetMovies(int);
    private: //private variables
       string hassequel;
 	  int number;
