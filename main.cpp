@@ -92,12 +92,7 @@ int main() {
 
     cout << "What genre do you want to watch (Seperate multiple genres with a space) --> ";
     getline(cin, Ugenre); //get user ID
-    for_each(Ugenre.begin(), Ugenre.end(), [](char & character) {
-    static int last = ' ';
-    if (last == ' ' && character != ' ' && ::isalpha(character) )
-    character = ::toupper(character);
-    last = character;
-    });
+	Ugenre = capitalize(Ugenre);
     cout << endl;
     time = stoi(Utime); //look for exceptions
     rating = stoi(Urating);
