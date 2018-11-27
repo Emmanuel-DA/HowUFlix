@@ -42,11 +42,11 @@ int main() {
     getline(myfile, year);
     position = Title.find("Season");
     if (position != string::npos) { //check rating to determine TV or movie
-      EntryS.setInfo(Title, "TV-Show", Genre, stof(UserRating), Rating, stoi(Duration), year);
+      EntryS.setInfo(capitalize(Title), "TV-Show", Genre, stof(UserRating), Rating, stoi(Duration), year);
       EntryS.SetShow();
     }
     else {
-      EntryM.setInfo(Title, "Movie", Genre, stof(UserRating), Rating, stoi(Duration), year);
+      EntryM.setInfo(capitalize(Title), "Movie", Genre, stof(UserRating), Rating, stoi(Duration), year);
 	  EntryM.SetMovie();
     }
   }
@@ -63,12 +63,7 @@ int main() {
   name = capitalize(name);
   cout << "Last name: ";
   getline(cin, name1);
-  for_each(name1.begin(), name1.end(), [](char & character) {
-    static int last = ' ';
-    if (last == ' ' && character != ' ' && ::isalpha(character) )
-    character = ::toupper(character);
-    last = character;
-  });
+  name1 = capitalize(name1);
   cout << "userID: ";
   getline(cin, ID); //get user ID
   User User1(name, name1, ID); //create an instance of the user class
@@ -76,27 +71,65 @@ int main() {
 
   cout << "For maximum satisfaction please enlarge the size of your console" << endl << endl;
   
-
+  //-----------------------------------------------------------------Get time from user
   try { 
-    cout << "How much me time have you set aside (minutes) :) --> ";
-    getline(cin, Utime); //get time
-    if (stoi(Utime) < 0){
-      throw runtime_error("Invalid time");
-    }
+	  bool error = true;
+	cout << "How much me time have you set aside (minutes) :) --> ";
+	while (error) {   //------------------Handling exceptions
+		getline(cin, Utime); //get time
+		try {
+			time = stoi(Utime); //kept to have a variety of responses
+			/*
+			if (time < 0) {
+				throw runtime_error("Invalid time");
+			}
+			*/
+			for_each(Utime.begin(), Utime.end(), [](char & character) { //accurately replaces previous checks
+				if (!::isdigit(character)) { //if input contains lurking non-integers
+					throw runtime_error("Invalid time");
+				}
+			});
+			error = false;
+		}
+		catch (runtime_error& excpt) {
+			cout << "Please enter a number greater than zero: ";
+		}
+		catch (...) {
+			cout << "Please enter only numbers: ";
+		}
+	}
 
-    cout << "How good should the video be (Scale of 1 - 5) --> ";
-    getline(cin, Urating);
-    if (stoi(Urating) < 0 || stoi(Urating) > 5) {
-      throw runtime_error("Invalid rating.");
-    }
+	//-----------------------------------------------------------------Get rating from user
+	cout << "How good should the video be (Scale of 1 - 5) --> ";
+	error = true;
+	while (error) {   //------------------Handling exceptions
+		getline(cin, Urating); //get rating
+		try {
+			rating = stoi(Urating);
+			if (rating < 0 || rating > 5) {
+				throw runtime_error("Invalid rating.");
+			}
+			for_each(Urating.begin(), Urating.end(), [](char & character) { //
+				if (!::isdigit(character)) { //if input contains lurking non-integers
+					throw runtime_error("Invalid time");
+				}
+			});
+			error = false;
+		}
+		catch (runtime_error& excpt) {
+			cout << "Please enter a number between 0 and 5 inclusive: ";
+		}
+		catch (...) {
+			cout << "Please enter only numbers: ";
+		}
+	}
 
-    cout << "What genre do you want to watch (Seperate multiple genres with a space) --> ";
+	//-----------------------------------------------------------------Get genre from user
+    cout << "What genre do you want to watch (Seperate multiple genres with a space)" << endl;
+	cout << "(Leave blank and hit enter to include all available genres) --> ";
     getline(cin, Ugenre); //get user ID
 	Ugenre = capitalize(Ugenre);
     cout << endl;
-    time = stoi(Utime); //look for exceptions
-    rating = stoi(Urating);
-
 
     //TVShows
     vector <TVShow> TVShowsFilter0; //containing required TV shows-- rating filter
@@ -124,6 +157,18 @@ int main() {
         UG.push_back(genre);
       }
     }
+	if (UG.size() == 0) { //additional "search for all genres" feature
+		UG.push_back("Drama");
+		UG.push_back("Action");
+		UG.push_back("Animation");
+		UG.push_back("Science");
+		UG.push_back("Fiction");
+		UG.push_back("Teen");
+		UG.push_back("Romance");
+		UG.push_back("Mystery");
+		UG.push_back("Thriller");
+		UG.push_back("Horror");
+	}
     for (int i = 0; i < TVShowsFilter0.size(); i++) {//check for a range of ratings so you can suggest to the user
       for (int j = 0; j < UG.size(); j++) {
         position = TVShowsFilter0.at(i).getGenre().find(UG.at(j));
@@ -178,12 +223,7 @@ int main() {
     if (!printedNothing) {
       cout << "What video would you like to watch (Enter title from above) ---> ";
       getline(cin, video);
-      for_each(video.begin(), video.end(), [](char & character) {
-        static int last = ' ';
-        if (last == ' ' && character != ' ' && ::isalpha(character) )
-        character = ::toupper(character);
-        last = character;
-      });
+	  video = capitalize(video);
       cout << endl;
 
       int index; //look for the index from the suggested one
@@ -216,12 +256,14 @@ int main() {
   return 0;
 }
 
-string capitalize(string userInput){
-  for_each(userInput.begin(), userInput.end(), [](char & character) {
-    static int last = ' ';
-    if (last == ' ' && character != ' ' && ::isalpha(character) )
-    character = ::toupper(character);
-    last = character;
-  });
-  return userInput;
+string capitalize(string userInput) {
+	char last = ' ';
+	for (int i = 0; i < userInput.size(); i++) {//seperate the genre into the a genre vector
+		if (last == ' ' && userInput[i] != ' ' && ::isalpha(userInput[i])) {
+			userInput[i] = ::toupper(userInput[i]);
+		}
+		last = userInput[i];
+	}
+	return userInput;
 }
+		
