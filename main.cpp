@@ -169,11 +169,12 @@ int main() {
 		UG.push_back("Thriller");
 		UG.push_back("Horror");
 	}
-    for (int i = 0; i < TVShowsFilter0.size(); i++) {//check for a range of ratings so you can suggest to the user
-      for (int j = 0; j < UG.size(); j++) {
+    for (int j = 0; j < UG.size(); j++) {//check for genre
+      for (int i = 0; i < TVShowsFilter0.size(); i++) {
         position = TVShowsFilter0.at(i).getGenre().find(UG.at(j));
         if (position != string::npos) {
           TVShowsFilter.push_back(TVShowsFilter0.at(i));
+		  TVShowsFilter0.erase(TVShowsFilter0.begin() + i); //remove the already added show to avoid duplication
         }
       }
     }
@@ -192,11 +193,12 @@ int main() {
       }
     }
     //Last filtering - genre
-    for (int i = 0; i < MoviesFilter0.size(); i++) {//check for a range of ratings so you can suggest to the user
-      for (int j = 0; j < UG.size(); j++) {
+    for (int j = 0; j < UG.size(); j++) {//check for genre
+      for (int i = 0; i < MoviesFilter0.size(); i++) {
         position = MoviesFilter0.at(i).getGenre().find(UG.at(j));
         if (position != string::npos) {
           MoviesFilter.push_back(MoviesFilter0.at(i));
+		  MoviesFilter0.erase(MoviesFilter0.begin() + i); //remove the already added movie to avoid duplication
         }
       }
     }
@@ -206,14 +208,14 @@ int main() {
 
     Sort<TVShow>::InsertionSort(TVShowsFilter);//sort according to rating using static function
     Sort<Movie>::InsertionSort(MoviesFilter);
-    cout << "TVShows --------------------------------------------------------------------------------------" << endl;//show suggestion to user
+    cout << "TVShows --------------------------------------------------------------------------------------" << endl << endl;//show suggestion to user
     for (int i = 0; i < TVShowsFilter.size(); i++) {
       TVShowsFilter.at(i).sneakpeak();
       cout << endl;
       printedNothing = false;
     }
     cout << endl;
-    cout << "Movies ---------------------------------------------------------------------------------------" << endl;
+    cout << "Movies ---------------------------------------------------------------------------------------" << endl << endl;
     for (int i = 0; i < MoviesFilter.size(); i++) {
       MoviesFilter.at(i).sneakpeak();
       cout << endl;
@@ -221,18 +223,30 @@ int main() {
     }
     cout << endl;
     if (!printedNothing) {
-      cout << "What video would you like to watch (Enter title from above) ---> ";
-      getline(cin, video);
-	  video = capitalize(video);
-      cout << endl;
-
-      int index; //look for the index from the suggested one
-      bool isMovie = true;
-      index = Search<Movie>::LinearSearch(MoviesFilter, video);
-      if (index == NULL) {
-        index = Search<TVShow>::LinearSearch(TVShowsFilter, video);
-        isMovie = false;
-      }
+		error = true;
+		int index; //look for the index from the suggested one
+		bool isMovie = true;
+		cout << "What video would you like to watch (Enter title from above) ---> ";
+		while (error) {   //------------------Handling exceptions
+			getline(cin, video); //get video
+			video = capitalize(video);
+			try {
+				index = Search<Movie>::LinearSearch(MoviesFilter, video);
+				if (index == -1) {
+					index = Search<TVShow>::LinearSearch(TVShowsFilter, video);
+					isMovie = false;
+				}
+				if (index == -1) {
+					isMovie = true; //reset to initial condition
+					throw - 1;
+				}
+				error = false;
+			}
+			catch (...) {
+				cout << "Please make sure you match the title given in the sneak peek: ";
+			}
+		}
+	  cout << endl;
       if (isMovie) { //print 
         MoviesFilter.at(index).PrintVideo();
       }
@@ -246,10 +260,11 @@ int main() {
     cout << "Thank you for using HowUFlix" << endl << endl;
       
     }
-  catch (runtime_error& excpt) {
+  catch (...) {
     // Prints the error message passed by throw statement
-    cout << excpt.what() << endl;
-    cout << "Cannot make suggestions based on given input." << endl;
+    //cout << excpt.what() << endl;
+	  cout << "Yikes! Something went wrong. Check back in a bit." << endl;
+	  cout << "----HowUFlix----" << endl << endl;
   }
 
   system("pause");
