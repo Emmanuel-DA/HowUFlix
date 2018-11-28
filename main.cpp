@@ -1,3 +1,5 @@
+//TODO: ALGORITHM
+
 #include <iostream>
 #include <fstream>
 #include <ctime>
