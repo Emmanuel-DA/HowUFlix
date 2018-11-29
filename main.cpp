@@ -1,4 +1,29 @@
-//TODO: ALGORITHM
+/*
+                  *********************************************
+                  *********************************************
+                  *********                           *********                           
+                  *********        ALGORITHM          *********
+                  *********        HOWUFLIX!          *********
+                  *********                           *********
+                  *********************************************
+                  *********************************************
+                  
+1: Populate our database by reading information from the file
+2: Filter the videos into movies and TV shows based on keyword - "Season". At the end of this step, we have one vector containing all movies from the file and another containing all TV shows. 
+3: We obtain user information and store this in a user class object.
+4: We obtain user input indicating their video preferences, specifically the amount of free time they have, their desired rating and preferred genres. 
+5: Based on the information we get, videos are suggested that are filtered in 3 stages:
+  a.) have durations similar to or less than the amount of free time the user has 
+  b.) have ratings similar to the user's desired rating (with a tolerance range of 0.5) 
+  c.) are of the desired genre
+6: The shortlist generated from suggested output is displayed to the user, narrowing down the options they have to choose between. 
+7: The user makes a choice from the list presented and proceeds to watch the desired video.
+
+The exceptions handle for negative time input, a rating outside the range of 1-5 and a genre that's outside the selection available in the database. There's also exception handling code for incorrectly typed video titles. Incorrect letter capitalization in names and titles has adequately been accounted for by capitalizing the first letter of each word in a title or name. 
+
+Searching for videos within the database is implemented using the Linear Search algorithm, sorting available videos is done using Selection Sort algorithm.
+
+*/
 
 #include <iostream>
 #include <fstream>
