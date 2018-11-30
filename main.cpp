@@ -27,14 +27,10 @@ Searching for videos within the database is implemented using the Linear Search 
 
 #include <iostream>
 #include <fstream>
-#include <ctime>
 #include <vector>
 #include <string>
-#include <cctype>
 #include <iomanip>
 #include <stdexcept>
-#include <algorithm>
-#include <future> //async
 using namespace std;
 #include "Video.h"
 #include "TVShow.h"
@@ -50,14 +46,18 @@ string capitalize(string);
 int main() {
   size_t position;
   ifstream myfile;
-  myfile.open("FavoriteMovieTVShowsClassList.csv");
-  string  Title, Duration, Genre, Rating, UserRating, name, ID, year, name1, Pname, Utime, Urating, Ugenre, video;//input variables
-  int time,rating;
-  TVShow EntryS; //class instances
+  myfile.open("FavoriteMovieTVShowsClassList.csv"); //open file
+  string  Title, Duration, Genre, Rating, UserRating, firstname, ID, year, lastname, Utime, Urating, Ugenre, video;//input variables
+  int time, rating;
+  TVShow EntryS; //class instances for database
   Movie EntryM;
 
-  vector <Movie> Movies;//playlist vector
-  vector <TVShow> TVShows;
+  vector <Movie> Movies;//containing required movies -- (filtered with movies)
+  vector <TVShow> TVShows; //containing required TV shows -- (filtered with time)
+  vector <Movie> MoviesFilter0; //containing required movies -- (filtered with ratings)
+  vector <TVShow> TVShowsFilter0; //containing required TV shows-- (filtered with with ratings)
+  vector <Movie> MoviesFilter; //containing required movies shows -- (filtered with genre)
+  vector <TVShow> TVShowsFilter; //containing required TV shows-- (filtered with genre)
   bool printedNothing = true;
   
   while (!myfile.eof()) { //Populate Database
@@ -86,14 +86,14 @@ int main() {
 
   cout << "We just need some info and you're set to dive in!" << endl << endl;
   cout << "First name: ";
-  getline(cin, name); //get user name
-  name = capitalize(name);
+  getline(cin, firstname); //get user name
+  firstname = capitalize(firstname);
   cout << "Last name: ";
-  getline(cin, name1);
-  name1 = capitalize(name1);
+  getline(cin, lastname);
+  lastname = capitalize(lastname);
   cout << "userID: ";
   getline(cin, ID); //get user ID
-  User User1(name, name1, ID); //create an instance of the user class
+  User User1(firstname, lastname, ID); //create an instance of the user class
   cout << endl;
 
   cout << "For maximum satisfaction please enlarge the size of your console" << endl << endl;
@@ -159,8 +159,7 @@ int main() {
     cout << endl;
 
     //TVShows
-    vector <TVShow> TVShowsFilter0; //containing required TV shows-- rating filter
-    vector <TVShow> TVShowsFilter; //containing required TV shows-- genre filter
+    
     //first filter-time
     TVShows = EntryS.GetShows(time); 
     //second filter-rating
@@ -209,8 +208,7 @@ int main() {
 
     
     //Movies
-    vector <Movie> MoviesFilter0; //containing required TV shows -- rating filter
-    vector <Movie> MoviesFilter; //containing required TV shows -- genre filter
+
     //first filter-time
     Movies = EntryM.GetMovies(time);
     //second filter-rating
@@ -252,7 +250,7 @@ int main() {
     if (!printedNothing) {
 		error = true;
 		int index; //look for the index from the suggested one
-		bool isMovie = true;
+		bool isMovie = true; //check if the user is picking a show or movie
 		cout << "What video would you like to watch (Enter title from above) ---> ";
 		while (error) {   //------------------Handling exceptions
 			getline(cin, video); //get video
