@@ -69,11 +69,11 @@ int main() {
     getline(myfile, year);
     position = Title.find("Season");
     if (position != string::npos) { //check rating to determine TV or movie
-      EntryS.setInfo(capitalize(Title), "TV-Show", Genre, stof(UserRating), Rating, stoi(Duration), year);
+      EntryS.setInfo(capitalize(Title), "TV-Show", capitalize(Genre), stof(UserRating), Rating, stoi(Duration), year);
       EntryS.SetShow();
     }
     else {
-      EntryM.setInfo(capitalize(Title), "Movie", Genre, stof(UserRating), Rating, stoi(Duration), year);
+      EntryM.setInfo(capitalize(Title), "Movie", capitalize(Genre), stof(UserRating), Rating, stoi(Duration), year);
 	  EntryM.SetMovie();
     }
   }
@@ -154,7 +154,7 @@ int main() {
 	//-----------------------------------------------------------------Get genre from user
     cout << "What genre do you want to watch (Seperate multiple genres with a space)" << endl;
 	cout << "(Leave blank and hit enter to include all available genres) --> ";
-    getline(cin, Ugenre); //get user ID
+    getline(cin, Ugenre); //get user genre
 	Ugenre = capitalize(Ugenre);
     cout << endl;
 
@@ -298,7 +298,10 @@ int main() {
 
 string capitalize(string userInput) {
 	char last = ' ';
-	for (int i = 0; i < userInput.size(); i++) {//seperate the genre into the a genre vector
+	for (int i = 0; i < userInput.size(); i++) {
+		if (::isalpha(userInput[i])) { //normalize
+			userInput[i] = ::tolower(userInput[i]);
+		}
 		if (last == ' ' && userInput[i] != ' ' && ::isalpha(userInput[i])) {
 			userInput[i] = ::toupper(userInput[i]);
 		}
